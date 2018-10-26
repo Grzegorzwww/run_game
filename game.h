@@ -9,13 +9,15 @@
 
 #include <defines.hpp>
 
-//#include "player.h"
-//#include "ball.h"
+
+
 #include "ground.h"
 #include "tree.h"
 #include "backgrounditem.h"
 #include "mushroom.h"
+#include "animatedmovingobj.h"
 #include "itemsgenerator.h"
+#include "player.h"
 
 //#include "paletka.h"
 //#include "menu.h"
@@ -74,12 +76,15 @@ private:
     void processEvents();
     void update();
     void render();
+    void move_camera();
     void motion_symulation();
-    void create_items(int i);
+    void create_items(backgorund_item_type_t i);
 
 
     const int SCALE = 30;
     sf::RenderWindow window;
+    sf::View view;
+
     b2Vec2 _gravity;
     b2World *World;
 
@@ -88,11 +93,16 @@ private:
 
     Ground *ground;
     Tree * tree_sample;
-    Mushroom * mushroom;
+    Mushroom * _mushroom;
 
 
     BackgroundItem *item_1;
     BackgroundItem *item_2;
+    sf::Clock clock;
+    sf::Time elapsed1 = clock.getElapsedTime();
+
+    Player *player;
+
 
 
     std::vector<BackgroundItem *> backgorud_items;
@@ -100,6 +110,9 @@ private:
     std::vector<sf::Sprite > sprites_buffor;
 
     ItemsGenerator *itemsGenerator;
+
+    unsigned int overtaking_point_x;
+    unsigned int delaying_point_x;
 
 
 

@@ -10,14 +10,11 @@ class Ground : public BackgroundItem
 {
     public:
 
-      Ground(b2World& World, int x, int y );
+      Ground(b2World& World, int x, int y,  texture_param_t param);
       virtual ~Ground();
-
 
       void startContact();
       void endContact();
-
-
 
     protected:
 

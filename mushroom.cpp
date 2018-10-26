@@ -1,7 +1,7 @@
 #include "mushroom.h"
 
-Mushroom::Mushroom(b2World& World, int x, int y):
-    BackgroundItem(World, MUSHROOM_TEXTURE_PATH, x, y, MUSHROOM_WIDTH, MUSHROOM_HEIGH)
+Mushroom::Mushroom(b2World& World, int x, int y, texture_param_t param):
+    BackgroundItem(World, param.textures[0], x, y, param.texture_width, param.texture_height)
 {
 
 

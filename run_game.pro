@@ -35,9 +35,8 @@ CONFIG(debug, debug|release): LIBS += -lsfml-audio-d -lsfml-graphics-d -lsfml-ne
 
 
 INCLUDEPATH += "/home/gwarchol/qt_workspace/SFML/include"
-#INCLUDEPATH += "/home/gwarchol/qt_workspace/SFML/include/SFML"
 DEPENDPATH += "/home/gwarchol/qt_workspace/SFML/include"
-#DEPENDPATH += "/home/gwarchol/qt_workspace/SFML/include/SFML"
+
 
 INCLUDEPATH += "/home/gwarchol/qt_workspace/box2d/include"
 DEPENDPATH += "/home/gwarchol/qt_workspace/box2d/include"
@@ -55,7 +54,10 @@ SOURCES += \
     tree.cpp \
     backgrounditem.cpp \
     mushroom.cpp \
-    itemsgenerator.cpp
+    itemsgenerator.cpp \
+    animatedmovingobj.cpp \
+    bird.cpp \
+    player.cpp
 
 HEADERS += \
     game.h \
@@ -66,5 +68,8 @@ HEADERS += \
     backgrounditem.h \
     mushroom.h \
     itemsgenerator.h \
-    cdelegate.h
+    cdelegate.h \
+    animatedmovingobj.h \
+    bird.h \
+    player.h
 

@@ -13,23 +13,44 @@ public:
     BackgroundItem();
     BackgroundItem(b2World& World, std::string texture_file, int x, int y,  float width, float height);
 
-   ~BackgroundItem();
+    virtual ~BackgroundItem();
 
     void setPosition(int x, int y);
-    void moveRight();
-    void moveLeft();
+    void setAnimationParameters(int animation_num, int actual_animation_iteration);
+
+    virtual void moveRight();
+    virtual void moveLeft();
+    virtual void run_animation();
 
    b2Vec2 getBodyPossition();
+
+   b2Body *getBodyInstance();
 
    void deleteObject();
    void setBodyDef(b2BodyType body_type);
 
 
 
-    sf::Sprite getSprite() {return _sprite;}
+    sf::Sprite *getSprite() {return &_sprite;}
     void getWindowSize(int w, int h);
 
+    int getNumOfTextures() {return _num_of_textures_to_animate;}
+    int getNumOfAnimationIter() {return _actual_animation_iteration;}
+    int setNumOfAnimationIter(const int num) {_actual_animation_iteration = num;}
 
+
+    sf::Sprite * getSpritePtr() {return &_sprite;}
+    sf::Texture * getTexturePtr() {return &_texture;}
+
+
+    void setBodyDensity(const float dens);
+    void setBodyRestitution(const float rest);
+    void setBodyFriction(const float fric);
+
+    void setFixtureCategoryBits(const unsigned short bits);
+    void setFixtureMaskBits(const unsigned short bits);
+
+    void setFixtureCollisionFilter(const unsigned short bitsCategory, const unsigned short bitsMask);
 
 protected:
 
@@ -52,6 +73,9 @@ private:
      b2Body* _body;
      b2RevoluteJointDef rjd;
      b2RevoluteJoint* m_joint;
+
+     int _num_of_textures_to_animate;
+     int _actual_animation_iteration;
 
 
 

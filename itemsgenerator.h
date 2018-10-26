@@ -7,7 +7,9 @@
 #include <cdelegate.h>
 #include <SFML/System.hpp>
 
- typedef CDelegate<void,int> delegate_t;
+#include "defines.hpp"
+
+ typedef CDelegate<void, backgorund_item_type_t> delegate_t;
 
 
 class ItemsGenerator
@@ -22,7 +24,7 @@ public:
     void items_generator();
 
 
-    template<class C, void (C::*Function)(int)>
+    template<class C, void (C::*Function)(backgorund_item_type_t)>
     void connect(C *instance)
     {
         _delegate.Bind<C, Function>(instance);

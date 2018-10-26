@@ -1,42 +1,40 @@
 #include "game.h"
+#include "defines.hpp"
 
+#include <SFML/System/Vector2.hpp>
 
-
-Game::Game() : window(sf::VideoMode(800, 600), "SFML window")
+Game::Game() : window(sf::VideoMode(800, 600), "SFML window"),
+    overtaking_point_x(0),delaying_point_x(0), player(nullptr)
 {
     //cto
 
     window.setFramerateLimit(60);
 
 
-
-
-
     _gravity = b2Vec2(0.0f, 25.0f);
     World = new b2World(_gravity);
 
 
+    view = window.getView();
+    window.setView(view);
 
 
     if (!back_ground_tex.loadFromFile("graphics/white_background.jpg")) {
         std::cerr <<"Can't load background Image\n";
     }
+    _backGroundSprite.setTextureRect(sf::IntRect(0, 0, ground_texture_parameter.texture_width,  window.getSize().y));
     _backGroundSprite.setTexture(back_ground_tex);
     _backGroundSprite.setPosition(0, 0);
 
-    itemsGenerator = new ItemsGenerator(2);
+    itemsGenerator = new ItemsGenerator(1);
     itemsGenerator->connect<Game, &Game::create_items>(this);
 
-    ground = new Ground(*World,400, 580);
+    ground = new Ground(*World,500, 580, ground_texture_parameter);
 
-    tree_sample = new Tree(*World, 500,500);
-
-    mushroom = new Mushroom(*World, 300,540);
-
-
-    //item_1 = new  MovingBackgroundItem(*World, "graphics/tree_v2.jpg", 900, 503, 221, 231);
-   // item_2 = new  MovingBackgroundItem(*World, "graphics/mushroom_2d_2.jpg", 400, 520, 160, 180);
-
+    BackgroundItem *temp_ptr;
+    if(!(player = new Player(*World, 550 ,450))){
+      ;//  player = nullptr;
+    }
 
 }
 
@@ -53,7 +51,11 @@ void Game::run() {
 
         update();
         render();
+        motion_symulation();
+        move_camera();
+
         itemsGenerator->items_generator();
+
     }
 }
 
@@ -77,9 +79,19 @@ void Game::processEvents() {
 
             break;
             case sf::Keyboard::Right :
+                player->moveRight();
+                std::cout <<" prawo"<<std::endl;
+                break;
+            case sf::Keyboard::Left :
+                player->moveLeft();
+                std::cout <<" lewo"<<std::endl;
+                break;
+            case sf::Keyboard::Up:
+                player->makeJump();
+                std::cout <<" up "<<std::endl;
                 break;
 
-                break;
+
             case sf::Keyboard::Down :
 
                 break;
@@ -155,10 +167,8 @@ void Game::processEvents() {
 
 void Game::update() {
 
-//    collisionDetection();
-//    constrolLogic();
-
-    motion_symulation();
+    //    collisionDetection();
+    //    constrolLogic();
 
 
     sf::Sprite *class_temp_sprite = new sf::Sprite();
@@ -177,98 +187,144 @@ void Game::update() {
 void Game::render()
 {
     window.clear();
-     window.draw(_backGroundSprite);
+
+    window.draw(_backGroundSprite);
 
     for(const auto &it : sprites_buffor)
-         window.draw(it);
-//    menu->draw(window);
+        window.draw(it);
+    //    menu->draw(window);
     sprites_buffor.clear();
     window.display();
+
+
+
+
+
+
+
 }
 
-void Game::create_items(int i)
+void Game::move_camera(){
+    sf::Vector2f center =  view.getCenter();
+
+
+    //std::cout << "player top = "<<player->getSpritePtr()->getGlobalBounds().left<<std::endl;
+    center.x =  player->getSpritePtr()->getGlobalBounds().left;
+    view.setCenter(center);
+    // std::cout <<"center = "<<center.x<<std::endl;
+    window.setView(view);
+
+
+
+
+    overtaking_point_x = center.x + (window.getSize().x/2) + OBJ_CREATE_MARGIN;
+    delaying_point_x = center.x - (window.getSize().x/2) + OBJ_CREATE_MARGIN;
+
+
+
+
+
+}
+
+void Game::create_items(backgorund_item_type_t i)
 {
+    int start_x =  overtaking_point_x;
+
+
+    BackgroundItem *temp_ptr;
+    switch(i){
+    case tree:
+        temp_ptr = new Tree(*World,start_x,390, tree_texture_parameter);
+        backgorud_items.push_back(temp_ptr);
+        break;
+    case mushroom:
+        temp_ptr = new Mushroom(*World, start_x,480, mushroom_texture_parameter);
+        backgorud_items.push_back(temp_ptr);
+        break;
+    case tree2:
+        //        if(temp_ptr = new Player(*World, 450 ,300)){
+        //            backgorud_items.push_back(temp_ptr);
+        //        }
+
+    case bird:
+        if(temp_ptr = new AnimatedMovingObj(*World, start_x ,250, bluebird_texture_parameter)){
+            backgorud_items.push_back(temp_ptr);
+        }
+        break;
+    case bird2:
+        if(temp_ptr = new AnimatedMovingObj(*World, start_x ,250, normal_texture_parameter)){
+            backgorud_items.push_back(temp_ptr);
+        }
+        break;
+    }
     std::cout <<"robie item"<<std::endl;
 }
 
 
 void Game::motion_symulation(){
-
-//    if(item_1 != nullptr){
-//        item_1->moveLeft();
-//        if(item_1->getBodyPossition().x <= -7){
-//            std::cout <<"usun" << std::endl;
-//           // item_1->deleteObject();
-//            delete item_1;
-//            item_1 = nullptr;
-//        }
-//    }
-
-//    if(item_2 != nullptr){
-//        item_2->moveLeft();
-//        if(item_2->getBodyPossition().x <= -7){
-//            std::cout <<"usun" << std::endl;
-//           // item_1->deleteObject();
-//            delete item_2;
-//            item_2 = nullptr;
-//        }
-//    }
+    // std::cout << "motion_symulation"<<std::endl;
+    std::vector<BackgroundItem *>::iterator it;
+    if(backgorud_items.size() > 0){
+        for(it = backgorud_items.begin(); it != backgorud_items.end(); it++){
+            if((*it) != nullptr){
+                //(*it)->moveLeft();
 
 
+                if(backgorud_items.size() > 0){
+                    if(delaying_point_x > ((*it)->getSpritePtr()->getPosition().x + OBJ_CREATE_MARGIN) )
+                    {
+                        delete (*it);
+                        *it = nullptr;
+                        if(backgorud_items.size() == 1)
+                            backgorud_items.clear();
+                        else
+                            backgorud_items.erase((it));
+                        std::cout << "po delete"<<std::endl;
+                        break;
+                    }
 
+                    if((*it)->getBodyPossition().x <= -7){;
+                        std::cout << "delete "<<std::endl;
+                        delete (*it);
+                        *it = nullptr;
+                        if(backgorud_items.size() == 1)
+                            backgorud_items.clear();
+                        else
+                            backgorud_items.erase((it));
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    int msek = clock.getElapsedTime().asMilliseconds();
+    if(msek >= 100){
+        int i;
+        if(player != nullptr){
+            player->run_animation();
+        }
+        if(backgorud_items.size() > 0){
+            std::vector<BackgroundItem *>::iterator it;
+            for(it = backgorud_items.begin(); it != backgorud_items.end(); it++){
+                if(*it != nullptr){
+                    AnimatedMovingObj *temp;
+                    Player *temp_player;
+                    if(temp = dynamic_cast<AnimatedMovingObj  *>(*it)){
+                        temp->run_animation();
+                    }
+
+                }
+            }
+        }
+        clock.restart();
+    }
 
 
 }
 
 
 
-
-
-
-//void Game::collisionDetection(){
-//    if((ground != nullptr) && (ball != nullptr)){
-
-//            float y = ball->getSprite().getPosition().y;
-//            if(prev_ball_altitude <= 500){
-//                if(y > 500 && (game_sate != MENU_DISPLAYED_PLAYER_1 || game_sate != MENU_DISPLAYED_PLAYER_2)){
-//                    switch(game_sate){
-//                    case WAIT_TO_FAIL_PLAYER_1:
-//                        game_sate = FAIL_DETECTED_PLAYER_1;
-//                        menu->hideResult();
-//                        break;
-//                    case WAIT_TO_FAIL_PLAYER_2:
-//                        game_sate = FAIL_DETECTED_PLAYER_2;
-//                        menu->hideResult();
-//                        break;
-//                    case FAIL_DETECTED_PLAYER_1:
-
-//                        break;
-//                    case FAIL_DETECTED_PLAYER_2:
-//                        //nop
-//                        break;
-//                    default:
-//                        break;
-//                    }
-//                }
-//            }
-//            prev_ball_altitude = y;
-//    }
-
-//    if(ball != nullptr){
-//        if(player_one->getSprite().getGlobalBounds().intersects(ball->getSprite().getGlobalBounds()) && !fail_detcted){
-//               game_sate = WAIT_TO_FAIL_PLAYER_2;
-//        }
-//        if(player_one->getPaddleSprite().getGlobalBounds().intersects(ball->getSprite().getGlobalBounds()) && !fail_detcted){
-//               game_sate = WAIT_TO_FAIL_PLAYER_2;
-//        }
-//        if(player_two->getSprite().getGlobalBounds().intersects(ball->getSprite().getGlobalBounds()) && !fail_detcted){
-//               game_sate = WAIT_TO_FAIL_PLAYER_1;
-//        }
-//        if(player_two->getPaddleSprite().getGlobalBounds().intersects(ball->getSprite().getGlobalBounds()) && !fail_detcted){
-//               game_sate = WAIT_TO_FAIL_PLAYER_1;
-//        }
-//    }
-//}
 
 
 
