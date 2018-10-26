@@ -21,6 +21,8 @@ Player::Player(b2World& Worl, int x, int y) :
 
     setFixtureCollisionFilter(PLAYER, GROUND);
 
+    player_direction = FORWARD;
+
 }
 
 Player::~Player()
@@ -35,10 +37,20 @@ void Player::run_animation(){
             sf::Texture *texture_temp =  BackgroundItem::getTexturePtr();
             //sf::Texture texture_temp;
             sf::Sprite *sprite_temp =  BackgroundItem::getSpritePtr();
-            if(!texture_temp->loadFromFile(textures[temp_animation_inter_counter])){
-                std::cout <<"nie mozna zaladowac tekstury: "<<textures[temp_animation_inter_counter]<<std::endl;
-            }else{
-                sprite_temp->setTexture(*texture_temp);
+            if(player_direction == FORWARD){
+                if(!texture_temp->loadFromFile(player_dir_r_texture_parameter.textures[temp_animation_inter_counter])){
+                    std::cout <<"nie mozna zaladowac tekstury: "<<player_dir_r_texture_parameter.textures[temp_animation_inter_counter]<<std::endl;
+                }else{
+                    sprite_temp->setTexture(*texture_temp);
+                }
+            } else if(player_direction == BACKWARD){
+
+                if(!texture_temp->loadFromFile(player_dir_l_texture_parameter.textures[temp_animation_inter_counter])){
+                    std::cout <<"nie mozna zaladowac tekstury: "<<player_dir_l_texture_parameter.textures[temp_animation_inter_counter]<<std::endl;
+                }else{
+                    sprite_temp->setTexture(*texture_temp);
+                }
+
             }
             if(temp_animation_inter_counter++ < 9){
                 ;
@@ -57,9 +69,11 @@ void Player::moveRight(){
     if(temp_body  != nullptr){
         b2Vec2 vel = temp_body->GetLinearVelocity();
         float desiredVel = 5;
+         if(is_runing) {desiredVel *= 2;}
         float velChange = desiredVel - vel.x;
         float force = temp_body->GetMass() * velChange / (1/60.0); //f = mv/t
         temp_body->ApplyForce( b2Vec2(force,0), temp_body->GetWorldCenter(), true );
+        player_direction = FORWARD;
     }
 }
 
@@ -68,10 +82,13 @@ void Player::moveLeft(){
     b2Body *temp_body =  BackgroundItem::getBodyInstance();
     if(temp_body != nullptr){
         b2Vec2 vel = temp_body->GetLinearVelocity();
+
         float desiredVel = -5;
+        if(is_runing) {desiredVel *= 2;}
         float velChange = desiredVel - vel.x;
         float force = temp_body->GetMass() * velChange / (1/60.0); //f = mv/t
         temp_body->ApplyForce( b2Vec2(force,0), temp_body->GetWorldCenter(), true );
+        player_direction = BACKWARD;
     }
 }
 void Player::makeJump(){

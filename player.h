@@ -13,6 +13,8 @@ public:
     void run_animation();
     void makeJump();
     void setObjSpeed(const float x);
+    void setRunning(const bool x) {is_runing = x;}
+    bool isRunning() {return is_runing;}
 
 
 private:
@@ -21,6 +23,7 @@ private:
     std::string textures[20];
     float speed;
     player_direction_t player_direction;
+    bool is_runing;
 
 
 };

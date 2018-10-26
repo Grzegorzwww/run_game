@@ -39,7 +39,7 @@ static const int JUMP_MAX_POSITION =200;
 static const bool PLAYER_1 = true;
 static const bool PLAYER_2 = false;
 
-static const float GROUND_WIDTH = 10000.0f;
+static const float GROUND_WIDTH = 100000.0f;
 static const float GROUND_HEIGH = 150.0f;
 static const std::string GROUND_TEXTURE_PATH =  "graphics/ground_texture_2.jpg";
 
