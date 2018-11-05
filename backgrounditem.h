@@ -50,6 +50,9 @@ public:
     void setFixtureCategoryBits(const unsigned short bits);
     void setFixtureMaskBits(const unsigned short bits);
 
+    void setBodyFixedRotation(bool x);
+    void setCircleShape();
+
     void setFixtureCollisionFilter(const unsigned short bitsCategory, const unsigned short bitsMask);
 
 protected:
@@ -69,6 +72,7 @@ private:
 
      b2BodyDef _bodyDef;
      b2PolygonShape _shape;
+     b2CircleShape _shape_circle;
      b2FixtureDef _fixtureDef;
      b2Body* _body;
      b2RevoluteJointDef rjd;

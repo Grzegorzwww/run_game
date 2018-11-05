@@ -18,6 +18,9 @@
 #include "animatedmovingobj.h"
 #include "itemsgenerator.h"
 #include "player.h"
+#include "bird.h"
+
+#include "dropitem.h"
 
 //#include "paletka.h"
 //#include "menu.h"

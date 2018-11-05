@@ -46,6 +46,8 @@ BackgroundItem::BackgroundItem(b2World& World, std::string texture_file, int x, 
      _body = World.CreateBody(&_bodyDef);
     _body->SetUserData((void *)&_sprite);
 
+
+
     _shape.SetAsBox((width/2)/SCALE, (height/2)/SCALE);
 
     _fixtureDef.density = 0.0f;
@@ -56,16 +58,33 @@ BackgroundItem::BackgroundItem(b2World& World, std::string texture_file, int x, 
      _fixtureDef.filter.maskBits = 0x0000;
 
     _fixtureDef.shape = &_shape;
+
     _body->CreateFixture(&_fixtureDef);
     _body->SetFixedRotation(true);
 
+
+
+
+
+}
+
+void BackgroundItem::setBodyFixedRotation(bool x){
+    _body->SetFixedRotation(x);
+    _body->SetAwake(true);
+
+
+
+}
+void BackgroundItem::setCircleShape(){
+    _shape_circle.m_radius = 0.75f;
+    _fixtureDef.shape = & _shape_circle;
+     _body->CreateFixture(&_fixtureDef);
 
 }
 
 void BackgroundItem::setFixtureCollisionFilter(const unsigned short bitsCategory, const unsigned short bitsMask){
     _fixtureDef.filter.categoryBits = bitsCategory;
      _fixtureDef.filter.maskBits = bitsMask;
-
      _body->CreateFixture(&_fixtureDef);
 }
 void BackgroundItem::setFixtureCategoryBits(const unsigned short bits){
@@ -116,20 +135,15 @@ void BackgroundItem::moveRight(){
 }
 
 void BackgroundItem::moveLeft(){
-    //        float impulse = _body->GetMass() / 2;
-    //        _body->ApplyLinearImpulse( b2Vec2(-impulse * 2.0, 0), _body->GetWorldCenter(), true );
     if(_body != nullptr){
-      //setPosition( _body->GetPosition().x - 0.1,  _body->GetPosition().y);
-//         _body->SetTransform(_body->GetPosition().x - 0.1, )
-//         _body->SetLinearVelocity( 5 );
 
-//        b2Vec2 vel = _body->GetLinearVelocity();
-//        float desiredVel = -5;
-//        float velChange = desiredVel - vel.x;
-//        float force = _body->GetMass() * velChange / (1/60.0); //f = mv/t
-//        _body->ApplyForce( b2Vec2(force,0), _body->GetWorldCenter(), true );
+
+        b2Vec2 vel = _body->GetLinearVelocity();
+        float desiredVel = 5;
+        float velChange = desiredVel - vel.x;
+        float force = _body->GetMass() * velChange / (1/60.0); //f = mv/t
+        _body->ApplyForce( b2Vec2(-force,0), _body->GetWorldCenter(), true );
     }
-
 //   std::cout<< _sprite.getOrigin().x<<", "<<_sprite.getOrigin().y << std::endl;
 
 

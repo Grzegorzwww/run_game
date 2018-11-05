@@ -34,7 +34,9 @@ static const bool  FORHAND = true;
 static const bool  BACKHAND = false;
 
 
-static const int JUMP_MAX_POSITION =200;
+static const int JUMP_MAX_POSITION =150;
+
+static const int RUN_ACCELERATION = 3;
 
 static const bool PLAYER_1 = true;
 static const bool PLAYER_2 = false;
@@ -84,7 +86,7 @@ static const int MAX_TEXTURES = 7;
 
 
 static const  texture_param_t ground_texture_parameter = {
-    10000.0f,
+    100000.0f,
     130.0f,
     {"graphics/ground_texture_2.jpg", "", "", "", "", "", "" },
     1
@@ -167,7 +169,7 @@ static const  texture_param_t player_dir_l_texture_parameter = {
     120.0f,
     {"graphics/animated/player/to_left/1.gif",
     "graphics/animated/player/to_left/2.gif",
-    "graphics/animated/player/to_let/3.gif",
+    "graphics/animated/player/to_left/3.gif",
     "graphics/animated/player/to_left/4.gif",
     "graphics/animated/player/to_left/5.gif",
     "graphics/animated/player/to_left/6.gif",
@@ -177,6 +179,28 @@ static const  texture_param_t player_dir_l_texture_parameter = {
     "graphics/animated/player/to_left/10.gif"},
     10
 };
+
+
+
+static const  texture_param_t drop_item[3] = {
+    {
+        40.0f,
+        40.0f,
+        {"graphics/cones/1_1.gif", "", "", "", "", "", "" },
+        1},
+    {
+        50.0f,
+        60.0f,
+        {"graphics/cones/1_2.gif", "", "", "", "", "", "" },
+        1},
+
+    {
+        40.0f,
+        40.0f,
+        {"graphics/cones/1_3.gif", "", "", "", "", "", "" },
+        1}
+};
+
 
 
 typedef enum  {tree, mushroom, tree2, bird, bird2} backgorund_item_type_t;
@@ -190,7 +214,8 @@ enum _entityCategory {
     GROUND =                 0x0001,
     BACKGROUND_ITEM =        0x0002,
     BACKGROUND_MOVING_ITEM = 0x0004,
-    PLAYER =                 0x0008
+    PLAYER =                 0x0008,
+    DROP_ITEM =              0x0016
   };
 
 

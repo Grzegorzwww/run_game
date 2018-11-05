@@ -17,21 +17,22 @@ ItemsGenerator::ItemsGenerator(int value)
 
 void ItemsGenerator::items_generator(){
 
-     int sek = clock.getElapsedTime().asSeconds();
-     if(sek >=  time_to_wait ){
-         std::cout << " time_to_wait"<< time_to_wait <<std::endl;
-         time_to_wait = ((std::rand() % 8 )+2);
-         int rand_item = ((std::rand() % 5 ));
-        // int rand_item = 0;
-        //   int rand_item = 3;
-//         if(rand_item <= 3){
-//             rand_item = 3;
-//         }
-
-         std::cout << "rand number "<<rand_item<<std::endl;
-         _delegate(( backgorund_item_type_t)rand_item);
-         clock.restart();
-     }
+    int sek = clock.getElapsedTime().asSeconds();
+    if(sek >=  time_to_wait ){
+        if(addBackGorundItem()){
+            std::cout << " time_to_wait"<< time_to_wait <<std::endl;
+            time_to_wait = ((std::rand() % 5 )+2);
+            int rand_item = ((std::rand() % 5 ));
+            // int rand_item = 0;
+            //   int rand_item = 3;
+            //         if(rand_item <= 3){
+            //             rand_item = 3;
+            //         }
+            std::cout << "rand number "<<rand_item<<std::endl;
+            _delegate(( backgorund_item_type_t)rand_item);
+        }
+        clock.restart();
+    }
 }
 
 bool ItemsGenerator::addBackGorundItem(){

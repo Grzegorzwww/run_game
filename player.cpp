@@ -69,7 +69,7 @@ void Player::moveRight(){
     if(temp_body  != nullptr){
         b2Vec2 vel = temp_body->GetLinearVelocity();
         float desiredVel = 5;
-         if(is_runing) {desiredVel *= 2;}
+         if(is_runing) {desiredVel *= RUN_ACCELERATION;}
         float velChange = desiredVel - vel.x;
         float force = temp_body->GetMass() * velChange / (1/60.0); //f = mv/t
         temp_body->ApplyForce( b2Vec2(force,0), temp_body->GetWorldCenter(), true );
@@ -84,7 +84,7 @@ void Player::moveLeft(){
         b2Vec2 vel = temp_body->GetLinearVelocity();
 
         float desiredVel = -5;
-        if(is_runing) {desiredVel *= 2;}
+        if(is_runing) {desiredVel *= RUN_ACCELERATION;}
         float velChange = desiredVel - vel.x;
         float force = temp_body->GetMass() * velChange / (1/60.0); //f = mv/t
         temp_body->ApplyForce( b2Vec2(force,0), temp_body->GetWorldCenter(), true );
@@ -99,7 +99,7 @@ void Player::makeJump(){
         b2Vec2 pos = temp_body->GetPosition();
         b2Vec2 vel = temp_body->GetLinearVelocity();
         if(pos.y * SCALE > JUMP_MAX_POSITION+JUMP_MAX_POSITION){
-            vel.y = -10;//upwards - don't change x velocity
+            vel.y = -13;//upwards - don't change x velocity
            temp_body->SetLinearVelocity( vel );
         }
     }

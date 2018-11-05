@@ -20,7 +20,6 @@ Ground::Ground(b2World& World, int x, int y,  texture_param_t param):
                                BACKGROUND_MOVING_ITEM |
                                PLAYER);
 
-
 }
 
 

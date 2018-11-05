@@ -57,7 +57,8 @@ SOURCES += \
     itemsgenerator.cpp \
     animatedmovingobj.cpp \
     bird.cpp \
-    player.cpp
+    player.cpp \
+    dropitem.cpp
 
 HEADERS += \
     game.h \
@@ -71,5 +72,6 @@ HEADERS += \
     cdelegate.h \
     animatedmovingobj.h \
     bird.h \
-    player.h
+    player.h \
+    dropitem.h
 
