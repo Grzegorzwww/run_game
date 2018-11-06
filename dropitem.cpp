@@ -12,11 +12,14 @@ DropItem::DropItem(b2World& World, int x, int y, texture_param_t param):
     setBodyDensity(1.0f);
     setBodyFriction(0.5);
     setBodyRestitution(0.2);
-    setCircleShape();
+    setCircleShape(0.75f);
 
-    std::cout <<"konstrukor drop item "<<std::endl;
+   // std::cout <<"konstrukor drop item "<<std::endl;
 
-    moveLeft();
-
+    if(rand() % 2 == 0){
+        moveLeft();
+    }else{
+        moveRight();
+    }
 
 }

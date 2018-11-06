@@ -51,7 +51,7 @@ public:
     void setFixtureMaskBits(const unsigned short bits);
 
     void setBodyFixedRotation(bool x);
-    void setCircleShape();
+    void setCircleShape(float val);
 
     void setFixtureCollisionFilter(const unsigned short bitsCategory, const unsigned short bitsMask);
 

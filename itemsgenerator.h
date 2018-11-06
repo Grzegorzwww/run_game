@@ -23,6 +23,9 @@ public:
     void setMaxBackGroundElements(int val) {max_background_items_on_screen = val;}
     void items_generator();
 
+    void decTimerToWaitInterval();
+    void incMaxBackGroundElements();
+
 
     template<class C, void (C::*Function)(backgorund_item_type_t)>
     void connect(C *instance)
@@ -33,10 +36,12 @@ public:
 private:
 
 
+
     int backgorund_items_on_screen;
     int max_background_items_on_screen;
 
     int time_to_wait;
+    int max_time_to_wait;
     sf::Clock clock; // starts the clock
     sf::Time elapsed1 = clock.getElapsedTime();
 

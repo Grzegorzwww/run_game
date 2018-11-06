@@ -19,10 +19,9 @@ Player::Player(b2World& Worl, int x, int y) :
 
     std::cout << "konstruktor Player "<<std::endl;
 
-    setFixtureCollisionFilter(PLAYER, GROUND);
+    setFixtureCollisionFilter(PLAYER, GROUND |  STONE);
 
     player_direction = FORWARD;
-
 }
 
 Player::~Player()
@@ -44,13 +43,11 @@ void Player::run_animation(){
                     sprite_temp->setTexture(*texture_temp);
                 }
             } else if(player_direction == BACKWARD){
-
                 if(!texture_temp->loadFromFile(player_dir_l_texture_parameter.textures[temp_animation_inter_counter])){
                     std::cout <<"nie mozna zaladowac tekstury: "<<player_dir_l_texture_parameter.textures[temp_animation_inter_counter]<<std::endl;
                 }else{
                     sprite_temp->setTexture(*texture_temp);
                 }
-
             }
             if(temp_animation_inter_counter++ < 9){
                 ;
@@ -92,10 +89,8 @@ void Player::moveLeft(){
     }
 }
 void Player::makeJump(){
-
     b2Body *temp_body =  BackgroundItem::getBodyInstance();
     if(temp_body != nullptr){
-        std::cout <<"robie skok"<<std::endl;
         b2Vec2 pos = temp_body->GetPosition();
         b2Vec2 vel = temp_body->GetLinearVelocity();
         if(pos.y * SCALE > JUMP_MAX_POSITION+JUMP_MAX_POSITION){
@@ -103,7 +98,16 @@ void Player::makeJump(){
            temp_body->SetLinearVelocity( vel );
         }
     }
-
+}
+void Player::makeKneel(){
+    b2Body *temp_body =  BackgroundItem::getBodyInstance();
+    if(temp_body != nullptr){
+        std::cout <<"robie skok"<<std::endl;
+        b2Vec2 pos = temp_body->GetPosition();
+        b2Vec2 vel = temp_body->GetLinearVelocity();
+        vel.y = 13;//upwards - don't change x velocity
+        temp_body->SetLinearVelocity( vel );
+    }
 }
 
 

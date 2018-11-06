@@ -21,9 +21,10 @@
 #include "bird.h"
 
 #include "dropitem.h"
+#include "stone.h"
 
-//#include "paletka.h"
-//#include "menu.h"
+
+#include "menu.h"
 
 
 /*
@@ -82,6 +83,9 @@ private:
     void move_camera();
     void motion_symulation();
     void create_items(backgorund_item_type_t i);
+    void collisionDetection();
+    void newGame();
+    void incLevel();
 
 
     const int SCALE = 30;
@@ -105,6 +109,11 @@ private:
     sf::Time elapsed1 = clock.getElapsedTime();
 
     Player *player;
+    Menu *menu;
+
+
+    unsigned int distance;
+    bool is_failed;
 
 
 

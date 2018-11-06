@@ -58,7 +58,9 @@ SOURCES += \
     animatedmovingobj.cpp \
     bird.cpp \
     player.cpp \
-    dropitem.cpp
+    dropitem.cpp \
+    stone.cpp \
+    menu.cpp
 
 HEADERS += \
     game.h \
@@ -73,5 +75,7 @@ HEADERS += \
     animatedmovingobj.h \
     bird.h \
     player.h \
-    dropitem.h
+    dropitem.h \
+    stone.h \
+    menu.h
 

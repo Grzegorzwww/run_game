@@ -12,6 +12,7 @@ public:
     void moveLeft();
     void run_animation();
     void makeJump();
+    void makeKneel();
     void setObjSpeed(const float x);
     void setRunning(const bool x) {is_runing = x;}
     bool isRunning() {return is_runing;}

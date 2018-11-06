@@ -5,7 +5,8 @@ AnimatedMovingObj::AnimatedMovingObj(b2World& World, int x, int y, texture_param
 {
    std::cout << "AnimatedMovingObj" << std::endl;
     BackgroundItem::setAnimationParameters(7, 2);
-    setObjSpeed(100.0f);
+
+    setObjSpeed((float)(std::rand() % 10) + 5.0);
 
 
     int i;

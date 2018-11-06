@@ -73,10 +73,10 @@ static const float TREE2_HEIGH = 540;
 static const std::string TREE2_TEXTURE_PATH = "graphics/tree_2.gif";
 
 
-static const  texture_param_t tree2_texture_parameter = {
-    480.0f,
-    540.0f,
-    "graphics/tree_2.gif", "", "", "", "", "", "" ,  " ", " ", " ",
+static const  texture_param_t stone_texture_parameter = {
+    130.0f,
+    110.0f,
+    "graphics/stone_v3.gif", "", "", "", "", "", "" ,  " ", " ", " ",
     1
 };
 
@@ -91,6 +91,9 @@ static const  texture_param_t ground_texture_parameter = {
     {"graphics/ground_texture_2.jpg", "", "", "", "", "", "" },
     1
 };
+
+
+
 
 
 static const float MUSHROOM_WIDTH = 60.0f;
@@ -203,7 +206,7 @@ static const  texture_param_t drop_item[3] = {
 
 
 
-typedef enum  {tree, mushroom, tree2, bird, bird2} backgorund_item_type_t;
+typedef enum  {tree, mushroom, stone, bird, bird2} backgorund_item_type_t;
 
 
 static const int OBJ_CREATE_MARGIN = 200;
@@ -215,7 +218,8 @@ enum _entityCategory {
     BACKGROUND_ITEM =        0x0002,
     BACKGROUND_MOVING_ITEM = 0x0004,
     PLAYER =                 0x0008,
-    DROP_ITEM =              0x0016
+    DROP_ITEM =              0x0016,
+    STONE =                  0x0032
   };
 
 

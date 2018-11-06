@@ -18,7 +18,12 @@ Game::Game() : window(sf::VideoMode(800, 600), "SFML window"),
     view = window.getView();
     window.setView(view);
     
-    
+    menu = new Menu(window.getSize().x,window.getSize().y);
+    distance = 0;
+    is_failed  = false;
+
+
+
     if (!back_ground_tex.loadFromFile("graphics/white_background.jpg")) {
         std::cerr <<"Can't load background Image\n";
     }
@@ -59,13 +64,26 @@ void Game::run() {
     }
 }
 
+
+void Game::newGame() {
+
+    player->setPosition(500, 500);
+    distance = 0;
+    is_failed = false;
+
+}
+
 void Game::processEvents() {
     int i= 0;
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-        player->moveRight();
+        if(!is_failed){
+            player->moveRight();
+        }
     }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-        player->moveLeft();
+        if(!is_failed){
+            player->moveLeft();
+        }
     }
 
 
@@ -91,9 +109,14 @@ void Game::processEvents() {
             case sf::Keyboard::Left :
                 break;
             case sf::Keyboard::Up:
-                player->makeJump();
+                if(!menu->getMenuState()){ player->makeJump();}
+                else{ menu->MoveUp();}
+
                 break;
             case sf::Keyboard::Down :
+                if(!menu->getMenuState()){ player->makeKneel();}
+                else{ menu->MoveDown();}
+
                 break;
             case sf::Keyboard::R :
                 player->setRunning(true);
@@ -101,8 +124,6 @@ void Game::processEvents() {
             case sf::Keyboard::L :
                 break;
             case sf::Keyboard::A :
-
-
                 break;
             case sf::Keyboard::D :
                 break;
@@ -115,25 +136,40 @@ void Game::processEvents() {
             case sf::Keyboard::B :
                 break;
             case sf::Keyboard::Space :
-
                 break;
             case sf::Keyboard::Y :
-
                 break;
             case sf::Keyboard::N :
-
-
-
-
                 break;
-
-
             default:
                 break;
             case sf::Keyboard::Escape :
+                 menu->showMenu();
                 break;
-
             case sf::Keyboard::Return :
+                if(menu->getMenuState()){
+
+                    switch(menu->GetPresesedItem()) {
+                    case NEW_GAME: //new game
+                        newGame();
+                        menu->hideMenu();
+                        menu->hideResult();
+                        break;
+                    case CONTINUE:
+                        menu->hideMenu();
+                        menu->hideResult();
+                        break;
+                    case RESULT_MENU:
+                        menu->showResult();
+                        menu->hideMenu();
+                        //TODO: //result here
+                        break;
+                    case EXIT:
+                        window.close();
+                        break;
+
+                    }
+                }
 
                 break;
             }
@@ -141,22 +177,18 @@ void Game::processEvents() {
         case sf::Event::KeyReleased:                        // KEY RELEASED
             switch(event.key.code)
             {
-
-
             case sf::Keyboard::R :
                 player->setRunning(false);
                 break;
-
             }
             break;
-
         }
     }
 }
 
 void Game::update() {
 
-    //    collisionDetection();
+        collisionDetection();
     //    constrolLogic();
 
 
@@ -181,11 +213,11 @@ void Game::render()
 
     for(const auto &it : sprites_buffor)
         window.draw(it);
-    //    menu->draw(window);
+     //   menu->draw(window);
+    menu->reflash_possition(window.getSize().x,window.getSize().y, delaying_point_x);
+    menu->draw(window);
     sprites_buffor.clear();
     window.display();
-
-
 
 
 
@@ -196,16 +228,12 @@ void Game::render()
 void Game::move_camera(){
     sf::Vector2f center =  view.getCenter();
 
-
     center.x =  player->getSpritePtr()->getGlobalBounds().left;
     view.setCenter(center);
     window.setView(view);
 
-
     overtaking_point_x = center.x + (window.getSize().x/2) + OBJ_CREATE_MARGIN;
     delaying_point_x = center.x - (window.getSize().x/2) + OBJ_CREATE_MARGIN;
-
-
 
 }
 
@@ -224,8 +252,10 @@ void Game::create_items(backgorund_item_type_t i)
         temp_ptr = new Mushroom(*World, start_x,480, mushroom_texture_parameter);
         backgorud_items.push_back(temp_ptr);
         break;
-    case tree2:
-
+    case stone:
+        if(temp_ptr = new Stone(*World, start_x ,450, stone_texture_parameter )){
+            backgorud_items.push_back(temp_ptr);
+        }
 
     case bird:
         if(temp_ptr = new Bird(*World, start_x ,(std::rand() % 300), bluebird_texture_parameter)){
@@ -249,6 +279,10 @@ void Game::motion_symulation(){
         for(it = backgorud_items.begin(); it != backgorud_items.end(); it++){
             if((*it) != nullptr){
 
+                Bird *temp;
+                if(temp = dynamic_cast<Bird  *>(*it)){
+                    temp->moveLeft();
+                }
 
                 if(backgorud_items.size() > 0){
                     if(delaying_point_x > ((*it)->getSpritePtr()->getPosition().x + OBJ_CREATE_MARGIN) )
@@ -278,7 +312,11 @@ void Game::motion_symulation(){
     }
 
     int msek = clock.getElapsedTime().asMilliseconds();
+
     if(msek >= 100){
+
+        menu->setScore(delaying_point_x);
+
         int i;
         if(player != nullptr){
             player->run_animation();
@@ -312,8 +350,35 @@ void Game::motion_symulation(){
         }
         clock.restart();
     }
+}
 
+void Game::incLevel(){
 
+    if(delaying_point_x % 1000 == 0){
+        itemsGenerator->decTimerToWaitInterval();
+    }
+    if(delaying_point_x % 2500 == 0){
+        itemsGenerator->incMaxBackGroundElements();
+    }
+}
+
+void Game::collisionDetection(){
+
+    if(player != nullptr ){
+        std::vector<BackgroundItem *>::iterator it;
+        for(it = backgorud_items.begin(); it != backgorud_items.end(); it++){
+            if(typeid(DropItem) ==  typeid(*(*it))){
+                if(player->getSpritePtr()->getGlobalBounds().intersects((*it)->getSpritePtr()->getGlobalBounds())){
+                    std::cout <<"kolizjaaaa"<<std::endl;
+                   // menu->showMenu();
+                    menu->setResulMenu("PRZEGRANA");
+                    menu->showResult();
+                    is_failed = true;
+
+                }
+            }
+        }
+    }
 }
 
 

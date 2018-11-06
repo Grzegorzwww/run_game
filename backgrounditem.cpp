@@ -75,8 +75,10 @@ void BackgroundItem::setBodyFixedRotation(bool x){
 
 
 }
-void BackgroundItem::setCircleShape(){
-    _shape_circle.m_radius = 0.75f;
+void BackgroundItem::setCircleShape(float val){
+    _shape_circle.m_radius = val;
+    _shape_circle.m_p.Set(0, 0);
+
     _fixtureDef.shape = & _shape_circle;
      _body->CreateFixture(&_fixtureDef);
 
@@ -136,8 +138,6 @@ void BackgroundItem::moveRight(){
 
 void BackgroundItem::moveLeft(){
     if(_body != nullptr){
-
-
         b2Vec2 vel = _body->GetLinearVelocity();
         float desiredVel = 5;
         float velChange = desiredVel - vel.x;
@@ -145,7 +145,6 @@ void BackgroundItem::moveLeft(){
         _body->ApplyForce( b2Vec2(-force,0), _body->GetWorldCenter(), true );
     }
 //   std::cout<< _sprite.getOrigin().x<<", "<<_sprite.getOrigin().y << std::endl;
-
 
 }
 

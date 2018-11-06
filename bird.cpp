@@ -4,6 +4,9 @@ Bird::Bird(b2World& World, int x,  int y, texture_param_t texture_param) :
    AnimatedMovingObj(World, x, y, texture_param)
 {
     setFixtureCollisionFilter(BACKGROUND_MOVING_ITEM, GROUND);
+
+    setBodyDef(b2_dynamicBody);
+
     std::srand( time( NULL ));
     rand_drop_pos = (std::rand() % 680);
     std::cout << "kontruktor rand = "<<rand_drop_pos<<std::endl;
