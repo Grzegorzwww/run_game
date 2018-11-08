@@ -15,21 +15,22 @@ Menu::Menu(float width, float height) {
     }
     show_hide_flag = false;
     show_result_menu_flag = false;
+    show_enter_name_flag = true;
 
     menu[NEW_GAME].setFont(font);
     menu[NEW_GAME].setColor(sf::Color::Green);
     menu[NEW_GAME].setString("New Game");
-    menu[NEW_GAME].setPosition(sf::Vector2f(width /3 , height / (MAX_NUMBER_ITEMS+ 1) * 1));
+    menu[NEW_GAME].setPosition(sf::Vector2f(width /4 , height / (MAX_NUMBER_ITEMS+ 1) * 1));
 
     menu[CONTINUE].setFont(font);
     menu[CONTINUE].setColor(sf::Color::Green);
     menu[CONTINUE].setString("Continue");
-    menu[CONTINUE].setPosition(sf::Vector2f(width /3 , height / (MAX_NUMBER_ITEMS+ 1) * 2));
+    menu[CONTINUE].setPosition(sf::Vector2f(width /4 , height / (MAX_NUMBER_ITEMS+ 1) * 2));
 
     menu[RESULT_MENU].setFont(font);
     menu[RESULT_MENU].setColor(sf::Color::Green);
     menu[RESULT_MENU].setString("WYNIKI");
-    menu[RESULT_MENU].setPosition(sf::Vector2f(width /3 , height / (MAX_NUMBER_ITEMS+ 1) * 3));
+    menu[RESULT_MENU].setPosition(sf::Vector2f(width /4 , height / (MAX_NUMBER_ITEMS+ 1) * 3));
 
     menu[ EXIT].setFont(font);
     menu[ EXIT].setColor(sf::Color::Green);
@@ -39,7 +40,7 @@ Menu::Menu(float width, float height) {
     menu[RESULT_TEXT].setFont(font);
     menu[RESULT_TEXT].setColor(sf::Color::Green);
     menu[RESULT_TEXT].setString(" - ");
-    menu[RESULT_TEXT].setPosition(sf::Vector2f(width /3 , height / 3 ));
+    menu[RESULT_TEXT].setPosition(sf::Vector2f(width /4 , height / 3 ));
 
     menu[SCORE_TEXT_PL1].setFont(font);
     menu[SCORE_TEXT_PL1].setColor(sf::Color::Green);
@@ -50,6 +51,11 @@ Menu::Menu(float width, float height) {
     menu[SCORE_TEXT_PL2].setColor(sf::Color::Green);
     menu[SCORE_TEXT_PL2].setString(" - ");
     menu[SCORE_TEXT_PL2].setPosition(sf::Vector2f( 20, 20));
+
+    menu[ENTER_NAME].setFont(font);
+    menu[ENTER_NAME].setColor(sf::Color::Black);
+    menu[ENTER_NAME].setString("Wpisz imie: ");
+    menu[ENTER_NAME].setPosition(sf::Vector2f(width /2 , height / (MAX_NUMBER_ITEMS+ 1) * 2));
 
 
 
@@ -65,6 +71,7 @@ void Menu::reflash_possition(float width, float height, int x_move){
     menu[RESULT_TEXT].setPosition(sf::Vector2f((width /4 + x_move) , height / 3 ));
     menu[SCORE_TEXT_PL1].setPosition(sf::Vector2f((width ) + x_move - 100, 20));
     menu[SCORE_TEXT_PL2].setPosition(sf::Vector2f( x_move- 40, 20));
+    menu[ENTER_NAME].setPosition(sf::Vector2f((width /4 + x_move) , height / 3 ));
 
 }
 
@@ -81,9 +88,17 @@ void Menu::draw(sf::RenderWindow &window) {
         window.draw(menu[SCORE_TEXT_PL1]);
 
     }
+    else if(show_enter_name_flag){
+          window.draw(menu[ENTER_NAME]);
+    }
+
       window.draw(menu[SCORE_TEXT_PL2]);
-
-
+}
+void Menu::enterPlayerName(const std::string str){
+//    player_name = str;
+    std::string temp("Wpisz imie: ");
+    temp.append(str);
+    menu[ENTER_NAME].setString(temp);
 }
 
 void Menu::setScore(unsigned int score){
@@ -104,6 +119,9 @@ void  Menu::hideMenu() {
 }
 void Menu::showResult() {
     show_result_menu_flag = true;
+
+
+
 }
 void Menu::hideResult() {
         show_result_menu_flag = false;
@@ -126,4 +144,12 @@ void Menu::MoveDown() {
 
     }
 }
+
+bool Menu::swapEnterNameFlag(){
+    if(show_enter_name_flag == true){
+        show_enter_name_flag = !show_enter_name_flag;
+        return !show_enter_name_flag;
+    }
+}
+
 

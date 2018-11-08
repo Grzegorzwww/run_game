@@ -9,6 +9,7 @@ Game::Game() : window(sf::VideoMode(800, 600), "SFML window"),
     //cto
 
     window.setFramerateLimit(60);
+    first_run = true;
 
 
     _gravity = b2Vec2(0.0f, 25.0f);
@@ -36,10 +37,16 @@ Game::Game() : window(sf::VideoMode(800, 600), "SFML window"),
 
     ground = new Ground(*World,500, 580, ground_texture_parameter);
 
+
     BackgroundItem *temp_ptr;
     if(!(player = new Player(*World, 550 ,450))){
         ;//  player = nullptr;
     }
+
+
+    resultloger = new ResultLoger("results.txt");
+
+
 
 }
 
@@ -60,7 +67,6 @@ void Game::run() {
         move_camera();
 
         itemsGenerator->items_generator();
-
     }
 }
 
@@ -71,10 +77,25 @@ void Game::newGame() {
     distance = 0;
     is_failed = false;
 
+
+    for(std::vector<BackgroundItem *>::iterator it = backgorud_items.begin(); it != backgorud_items.end(); it++){
+        if((*it) != nullptr){
+               delete (*it);
+        }
+    }
+
+    backgorud_items.clear();
 }
 
 void Game::processEvents() {
     int i= 0;
+
+
+
+
+
+
+
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
         if(!is_failed){
@@ -93,10 +114,26 @@ void Game::processEvents() {
     while (window.pollEvent(event))
     {
 
+
+
+
         // check the type of the event...
         switch (event.type)
         {
         // window closed
+
+
+
+        case sf::Event::TextEntered :
+            if (event.text.unicode < 128)
+            {
+                 entered_text += static_cast<char>(event.text.unicode);
+                 menu->enterPlayerName(entered_text);
+            }
+
+            break;
+
+
         case sf::Event::Closed:
             window.close();
             break;
@@ -147,6 +184,12 @@ void Game::processEvents() {
                  menu->showMenu();
                 break;
             case sf::Keyboard::Return :
+
+                if(menu->swapEnterNameFlag()){
+                    menu->enterPlayerName(entered_text);
+                    player_name = entered_text;
+                }
+
                 if(menu->getMenuState()){
 
                     switch(menu->GetPresesedItem()) {
@@ -165,10 +208,15 @@ void Game::processEvents() {
                         //TODO: //result here
                         break;
                     case EXIT:
+                         //TODO: Dorobic nawiększy wynik i poprawić zapis
+                        resultloger->addScore(player_name,  overtaking_point_x);
                         window.close();
                         break;
-
                     }
+
+
+
+
                 }
 
                 break;

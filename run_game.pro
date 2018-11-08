@@ -60,7 +60,8 @@ SOURCES += \
     player.cpp \
     dropitem.cpp \
     stone.cpp \
-    menu.cpp
+    menu.cpp \
+    resultloger.cpp
 
 HEADERS += \
     game.h \
@@ -77,5 +78,6 @@ HEADERS += \
     player.h \
     dropitem.h \
     stone.h \
-    menu.h
+    menu.h \
+    resultloger.h
 

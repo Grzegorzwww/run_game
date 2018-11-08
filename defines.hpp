@@ -7,6 +7,7 @@
 #include <Box2D/Box2D.h>
 #include <SFML/Graphics/Rect.hpp>
 #include "sstream"
+#include "map"
 
 
 
@@ -222,6 +223,8 @@ enum _entityCategory {
     STONE =                  0x0032
   };
 
+
+//typedef std::map <std::string , int > results_data_t;
 
 
 

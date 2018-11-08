@@ -5,8 +5,7 @@
 #include <cstdint>
 #include <cassert>
 #include <iostream>
-#include "sstream"
-
+#include <sstream>
 #include <defines.hpp>
 
 
@@ -24,7 +23,9 @@
 #include "stone.h"
 
 
+
 #include "menu.h"
+#include "resultloger.h"
 
 
 /*
@@ -92,6 +93,9 @@ private:
     sf::RenderWindow window;
     sf::View view;
 
+    std::string entered_text;
+    std::string player_name;
+
     b2Vec2 _gravity;
     b2World *World;
 
@@ -110,10 +114,14 @@ private:
 
     Player *player;
     Menu *menu;
+    ResultLoger * resultloger;
 
 
     unsigned int distance;
     bool is_failed;
+    bool first_run;
+
+
 
 
 

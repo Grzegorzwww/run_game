@@ -8,7 +8,7 @@
 #include "SFML/Graphics.hpp"
 
 static const int MAX_NUMBER_ITEMS = 4;
-static const int MAX_NUMBER_ALL_ITEMS = 7;
+static const int MAX_NUMBER_ALL_ITEMS = 8;
 
 
 static const int NEW_GAME =0;
@@ -19,6 +19,7 @@ static const int RESULT_TEXT = 4;
 
 static const int SCORE_TEXT_PL1 = 5;
 static const int SCORE_TEXT_PL2 = 6;
+static const int ENTER_NAME = 7;
 
 
 
@@ -41,10 +42,12 @@ public:
     void hideResult();
 
     bool getMenuState() {return show_hide_flag;}
+    bool swapEnterNameFlag();
     void MoveUp();
     void MoveDown();
     void setResulMenu(std::string str);
     void setScore(unsigned int score);
+    void enterPlayerName(const std::string str);
 
 
 
@@ -55,10 +58,11 @@ private:
       Menu();
       int selectedItemIndex;
       sf::Font font;
+      std::string player_name;
       sf::Text menu[MAX_NUMBER_ALL_ITEMS];
       volatile bool show_hide_flag;
       volatile bool show_result_menu_flag;
-
+      volatile bool  show_enter_name_flag;
 
 
 
