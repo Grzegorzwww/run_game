@@ -118,7 +118,7 @@ private:
 
 
     unsigned int distance;
-    bool is_failed;
+    bool player_freeze_flag;
     bool first_run;
 
 

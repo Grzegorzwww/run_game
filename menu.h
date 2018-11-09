@@ -4,6 +4,7 @@
 #include "iostream"
 #include "ostream"
 #include "sstream"
+#include "defines.hpp"
 
 #include "SFML/Graphics.hpp"
 
@@ -48,6 +49,7 @@ public:
     void setResulMenu(std::string str);
     void setScore(unsigned int score);
     void enterPlayerName(const std::string str);
+    void getResultData(const results_data_t x);
 
 
 
@@ -63,6 +65,10 @@ private:
       volatile bool show_hide_flag;
       volatile bool show_result_menu_flag;
       volatile bool  show_enter_name_flag;
+
+      results_data_t temp_results;
+
+
 
 
 

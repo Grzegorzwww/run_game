@@ -38,7 +38,7 @@ Menu::Menu(float width, float height) {
     menu[ EXIT].setPosition(sf::Vector2f(width /3 , height / (MAX_NUMBER_ITEMS+ 1) * 4));
 
     menu[RESULT_TEXT].setFont(font);
-    menu[RESULT_TEXT].setColor(sf::Color::Green);
+    menu[RESULT_TEXT].setColor(sf::Color::Red);
     menu[RESULT_TEXT].setString(" - ");
     menu[RESULT_TEXT].setPosition(sf::Vector2f(width /4 , height / 3 ));
 
@@ -68,10 +68,10 @@ void Menu::reflash_possition(float width, float height, int x_move){
     menu[CONTINUE].setPosition(sf::Vector2f((width /4 + x_move) , height / (MAX_NUMBER_ITEMS+ 1) * 2));
     menu[RESULT_MENU].setPosition(sf::Vector2f((width /4 + x_move), height / (MAX_NUMBER_ITEMS+ 1) * 3));
     menu[ EXIT].setPosition(sf::Vector2f((width /4 + x_move) , height / (MAX_NUMBER_ITEMS+ 1) * 4));
-    menu[RESULT_TEXT].setPosition(sf::Vector2f((width /4 + x_move) , height / 3 ));
+    menu[RESULT_TEXT].setPosition(sf::Vector2f((width /8 + x_move) , height / 6 ));
     menu[SCORE_TEXT_PL1].setPosition(sf::Vector2f((width ) + x_move - 100, 20));
     menu[SCORE_TEXT_PL2].setPosition(sf::Vector2f( x_move- 40, 20));
-    menu[ENTER_NAME].setPosition(sf::Vector2f((width /4 + x_move) , height / 3 ));
+    menu[ENTER_NAME].setPosition(sf::Vector2f((width /8 + x_move) , height / 3 ));
 
 }
 
@@ -102,7 +102,7 @@ void Menu::enterPlayerName(const std::string str){
 }
 
 void Menu::setScore(unsigned int score){
-    menu[SCORE_TEXT_PL2].setString("Dystans: " + std::to_string(score));
+    menu[SCORE_TEXT_PL2].setString("Dystans: " + std::to_string(score / 100)+ "[M] ");
 }
 
 void  Menu::setResulMenu(std::string str) {
@@ -150,6 +150,19 @@ bool Menu::swapEnterNameFlag(){
         show_enter_name_flag = !show_enter_name_flag;
         return !show_enter_name_flag;
     }
+}
+void Menu::getResultData(const results_data_t x){
+  temp_results = x;
+  std::string str_temp;
+  for(results_data_t::reverse_iterator it = temp_results.rbegin(); it != temp_results.rend(); ++it ) {
+      std::string temp = it->second;
+      if(!temp.empty()){
+          temp.erase(std::remove(temp.begin(), temp.end(), ' '), temp.end());
+          std::cout<<temp<<"   "<<it->second<<std::endl;
+          str_temp += std::string(temp+" - "+std::to_string(it->first)+" \n");
+      }
+  }
+  menu[RESULT_TEXT].setString(str_temp);
 }
 
 

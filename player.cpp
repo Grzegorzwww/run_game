@@ -17,7 +17,7 @@ Player::Player(b2World& Worl, int x, int y) :
     setBodyDensity(400.0f);
     setBodyFriction(0.3f);
 
-    std::cout << "konstruktor Player "<<std::endl;
+    //std::cout << "konstruktor Player "<<std::endl;
 
     setFixtureCollisionFilter(PLAYER, GROUND |  STONE);
 
@@ -65,7 +65,7 @@ void Player::moveRight(){
     b2Body *temp_body =  BackgroundItem::getBodyInstance();
     if(temp_body  != nullptr){
         b2Vec2 vel = temp_body->GetLinearVelocity();
-        float desiredVel = 5;
+        float desiredVel = 10;
          if(is_runing) {desiredVel *= RUN_ACCELERATION;}
         float velChange = desiredVel - vel.x;
         float force = temp_body->GetMass() * velChange / (1/60.0); //f = mv/t
@@ -80,7 +80,7 @@ void Player::moveLeft(){
     if(temp_body != nullptr){
         b2Vec2 vel = temp_body->GetLinearVelocity();
 
-        float desiredVel = -5;
+        float desiredVel = -10;
         if(is_runing) {desiredVel *= RUN_ACCELERATION;}
         float velChange = desiredVel - vel.x;
         float force = temp_body->GetMass() * velChange / (1/60.0); //f = mv/t
@@ -102,7 +102,7 @@ void Player::makeJump(){
 void Player::makeKneel(){
     b2Body *temp_body =  BackgroundItem::getBodyInstance();
     if(temp_body != nullptr){
-        std::cout <<"robie skok"<<std::endl;
+      //  std::cout <<"robie skok"<<std::endl;
         b2Vec2 pos = temp_body->GetPosition();
         b2Vec2 vel = temp_body->GetLinearVelocity();
         vel.y = 13;//upwards - don't change x velocity

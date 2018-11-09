@@ -225,6 +225,7 @@ enum _entityCategory {
 
 
 //typedef std::map <std::string , int > results_data_t;
+typedef std::map <int, std::string> results_data_t;
 
 
 

@@ -7,11 +7,18 @@ ItemsGenerator::ItemsGenerator(int value)
     max_background_items_on_screen = value;
     time_to_wait = 1;
     max_time_to_wait = 6;
+    generate_on_off = false;
 
     std::srand( time( NULL ) );
+}
 
 
+void ItemsGenerator::start(){
+    generate_on_off = true;
+}
 
+void ItemsGenerator::stop(){
+    generate_on_off = false;
 }
 
 void ItemsGenerator::decTimerToWaitInterval(){
@@ -24,9 +31,9 @@ void ItemsGenerator::incMaxBackGroundElements(){
 void ItemsGenerator::items_generator(){
 
     int sek = clock.getElapsedTime().asSeconds();
-    if(sek >=  time_to_wait ){
+    if(sek >=  time_to_wait && generate_on_off){
         if(addBackGorundItem()){
-            std::cout << " time_to_wait"<< time_to_wait <<std::endl;
+            //std::cout << " time_to_wait"<< time_to_wait <<std::endl;
             time_to_wait = ((std::rand() % max_time_to_wait )+2);
             int rand_item = ((std::rand() % 5 ));
             // int rand_item = 0;
@@ -35,7 +42,7 @@ void ItemsGenerator::items_generator(){
             //             rand_item = 3;
             //         }
             //rand_item = 2;
-            std::cout << "rand number "<<rand_item<<std::endl;
+            //std::cout << "rand number "<<rand_item<<std::endl;
             _delegate(( backgorund_item_type_t)rand_item);
         }
         clock.restart();

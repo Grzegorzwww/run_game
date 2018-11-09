@@ -26,6 +26,9 @@ public:
     void decTimerToWaitInterval();
     void incMaxBackGroundElements();
 
+    void stop();
+    void start();
+
 
     template<class C, void (C::*Function)(backgorund_item_type_t)>
     void connect(C *instance)
@@ -45,6 +48,7 @@ private:
     sf::Clock clock; // starts the clock
     sf::Time elapsed1 = clock.getElapsedTime();
 
+    bool generate_on_off;
     delegate_t _delegate;
 
 

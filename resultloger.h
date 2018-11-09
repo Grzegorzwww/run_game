@@ -15,7 +15,7 @@ public:
 
     void openFile();
     void addScore(std::string str, int score);
-    std::map <std::string , int > & showScore();
+    results_data_t &showScore();
 
 
 private:
@@ -23,7 +23,7 @@ private:
       enum {MAX_RESULTS = 6};
       FILE* fp;
 
-      std::map <std::string , int > result_data;
+      std::map<int, std::string> result_data;
       std::string file_name;
       std::fstream fout;
       std::streampos pos;

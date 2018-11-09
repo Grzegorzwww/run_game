@@ -21,7 +21,7 @@ Game::Game() : window(sf::VideoMode(800, 600), "SFML window"),
     
     menu = new Menu(window.getSize().x,window.getSize().y);
     distance = 0;
-    is_failed  = false;
+    player_freeze_flag  = true;
 
 
 
@@ -45,9 +45,6 @@ Game::Game() : window(sf::VideoMode(800, 600), "SFML window"),
 
 
     resultloger = new ResultLoger("results.txt");
-
-
-
 }
 
 Game::~Game()
@@ -75,7 +72,8 @@ void Game::newGame() {
 
     player->setPosition(500, 500);
     distance = 0;
-    is_failed = false;
+    player_freeze_flag = false;
+    itemsGenerator->start();
 
 
     for(std::vector<BackgroundItem *>::iterator it = backgorud_items.begin(); it != backgorud_items.end(); it++){
@@ -90,19 +88,12 @@ void Game::newGame() {
 void Game::processEvents() {
     int i= 0;
 
-
-
-
-
-
-
-
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-        if(!is_failed){
+        if(!player_freeze_flag){
             player->moveRight();
         }
     }else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-        if(!is_failed){
+        if(!player_freeze_flag){
             player->moveLeft();
         }
     }
@@ -114,10 +105,6 @@ void Game::processEvents() {
     while (window.pollEvent(event))
     {
 
-
-
-
-        // check the type of the event...
         switch (event.type)
         {
         // window closed
@@ -130,9 +117,7 @@ void Game::processEvents() {
                  entered_text += static_cast<char>(event.text.unicode);
                  menu->enterPlayerName(entered_text);
             }
-
             break;
-
 
         case sf::Event::Closed:
             window.close();
@@ -188,6 +173,8 @@ void Game::processEvents() {
                 if(menu->swapEnterNameFlag()){
                     menu->enterPlayerName(entered_text);
                     player_name = entered_text;
+                    itemsGenerator->start();
+                    player_freeze_flag = false;
                 }
 
                 if(menu->getMenuState()){
@@ -203,20 +190,19 @@ void Game::processEvents() {
                         menu->hideResult();
                         break;
                     case RESULT_MENU:
+                        menu->getResultData(resultloger->showScore());
                         menu->showResult();
                         menu->hideMenu();
                         //TODO: //result here
                         break;
                     case EXIT:
                          //TODO: Dorobic nawiększy wynik i poprawić zapis
-                        resultloger->addScore(player_name,  overtaking_point_x);
+                        if( overtaking_point_x / 100 > 30) {
+                            resultloger->addScore(player_name,  overtaking_point_x / 100);
+                        }
                         window.close();
                         break;
                     }
-
-
-
-
                 }
 
                 break;
@@ -237,7 +223,6 @@ void Game::processEvents() {
 void Game::update() {
 
         collisionDetection();
-    //    constrolLogic();
 
 
     sf::Sprite *class_temp_sprite = new sf::Sprite();
@@ -267,29 +252,20 @@ void Game::render()
     sprites_buffor.clear();
     window.display();
 
-
-
-
-
 }
 
 void Game::move_camera(){
     sf::Vector2f center =  view.getCenter();
-
     center.x =  player->getSpritePtr()->getGlobalBounds().left;
     view.setCenter(center);
     window.setView(view);
-
     overtaking_point_x = center.x + (window.getSize().x/2) + OBJ_CREATE_MARGIN;
     delaying_point_x = center.x - (window.getSize().x/2) + OBJ_CREATE_MARGIN;
-
 }
 
 void Game::create_items(backgorund_item_type_t i)
 {
     int start_x =  overtaking_point_x;
-
-
     BackgroundItem *temp_ptr;
     switch(i){
     case tree:
@@ -316,22 +292,18 @@ void Game::create_items(backgorund_item_type_t i)
         }
         break;
     }
-    std::cout <<"robie item"<<std::endl;
 }
 
 
 void Game::motion_symulation(){
-
     std::vector<BackgroundItem *>::iterator it;
     if(backgorud_items.size() > 0){
         for(it = backgorud_items.begin(); it != backgorud_items.end(); it++){
             if((*it) != nullptr){
-
                 Bird *temp;
                 if(temp = dynamic_cast<Bird  *>(*it)){
                     temp->moveLeft();
                 }
-
                 if(backgorud_items.size() > 0){
                     if(delaying_point_x > ((*it)->getSpritePtr()->getPosition().x + OBJ_CREATE_MARGIN) )
                     {
@@ -344,7 +316,6 @@ void Game::motion_symulation(){
                             backgorud_items.erase((it));
                         break;
                     }
-
                     if((*it)->getBodyPossition().x <= -7){;
                         delete (*it);
                         *it = nullptr;
@@ -358,13 +329,9 @@ void Game::motion_symulation(){
             }
         }
     }
-
     int msek = clock.getElapsedTime().asMilliseconds();
-
     if(msek >= 100){
-
         menu->setScore(delaying_point_x);
-
         int i;
         if(player != nullptr){
             player->run_animation();
@@ -373,12 +340,10 @@ void Game::motion_symulation(){
             std::vector<BackgroundItem *>::iterator it;
             for(it = backgorud_items.begin(); it != backgorud_items.end(); it++){
                 if(*it != nullptr){
-
                     AnimatedMovingObj *temp;
                     if(temp = dynamic_cast<AnimatedMovingObj  *>(*it)){
                         temp->run_animation();
                     }
-
                     Bird *temp_bird_obj;
                     if(typeid(Bird) ==  typeid(*(*it))){
                         if(temp_bird_obj = static_cast< Bird  *>(*it)){
@@ -388,11 +353,9 @@ void Game::motion_symulation(){
                                  item = new DropItem(*World,temp_bird_obj->getSpritePtr()->getGlobalBounds().left, temp_bird_obj->getSpritePtr()->getGlobalBounds().top, drop_item[std::rand()%3]);
                                  backgorud_items.push_back(item);
                                  break;
-
                             }
                         }
                     }
-
                 }
             }
         }
@@ -401,7 +364,6 @@ void Game::motion_symulation(){
 }
 
 void Game::incLevel(){
-
     if(delaying_point_x % 1000 == 0){
         itemsGenerator->decTimerToWaitInterval();
     }
@@ -411,17 +373,15 @@ void Game::incLevel(){
 }
 
 void Game::collisionDetection(){
-
     if(player != nullptr ){
         std::vector<BackgroundItem *>::iterator it;
         for(it = backgorud_items.begin(); it != backgorud_items.end(); it++){
             if(typeid(DropItem) ==  typeid(*(*it))){
                 if(player->getSpritePtr()->getGlobalBounds().intersects((*it)->getSpritePtr()->getGlobalBounds())){
-                    std::cout <<"kolizjaaaa"<<std::endl;
-                   // menu->showMenu();
+                    itemsGenerator->stop();
                     menu->setResulMenu("PRZEGRANA");
                     menu->showResult();
-                    is_failed = true;
+                    player_freeze_flag = true;
 
                 }
             }
